@@ -1,0 +1,19 @@
+{
+    "ReRoutes": [
+        {
+            "DownstreamPathTemplate": "/api/{version}/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 9001
+                }
+            ],
+            "UpstreamPathTemplate": "/api/{version}/{everything}",
+            "UpstreamHttpMethod": [ "Get", "Post" ]
+        }
+    ],
+    "GlobalConfiguration": {
+        "BaseUrl": "http://localhost:7000"
+    }
+}
