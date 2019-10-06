@@ -19,7 +19,7 @@ cd GatewayApi
 dotnet run
 ```
 
-This will start the Api Gateway. Now you can access the Assets microservice through Ocelot Api Gateway:
+This will start the Api Gateway. Now you can access the Assets microservice (v2 and v3 available) through Ocelot Api Gateway:
 
 ```
 http://localhost/api/v2/assets/
