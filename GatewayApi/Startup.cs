@@ -1,33 +1,74 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using System;
+using System.Text;
 
 namespace GatewayApi
 {
     public class Startup
     {
+        public IConfiguration _configuration { get; }
+        
+        private readonly string _authenticationProviderKey = "parzival";
+
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            // TODO: remove after testing
+            Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
+            _configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddOcelot(Configuration);
+            var jwtConfig = _configuration.GetSection("JWT");
+            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtConfig["Secret"]));
+
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = signingKey,
+                ValidateIssuer = true,
+                ValidIssuer = jwtConfig["Issuer"],
+                ValidateAudience = true,
+                ValidAudience = jwtConfig["Audience"],
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero,
+                RequireExpirationTime = true,
+            };
+
+            services.AddAuthentication(o =>
+            {
+                o.DefaultAuthenticateScheme = _authenticationProviderKey;
+            })
+            .AddJwtBearer(_authenticationProviderKey, options => 
+            {
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = tokenValidationParameters;
+            });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder =>
+                {
+                    builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                });
+            });
+            
+            services
+                .AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services
+                .AddOcelot(_configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

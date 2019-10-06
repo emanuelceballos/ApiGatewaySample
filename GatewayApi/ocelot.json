@@ -1,7 +1,19 @@
 {
     "ReRoutes": [
         {
-            "DownstreamPathTemplate": "/api/{version}/{everything}",
+            "DownstreamPathTemplate": "/api/{version}/auth/{any}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 9002
+                }
+            ],
+            "UpstreamPathTemplate": "/api/{version}/auth/{any}",
+            "UpstreamHttpMethod": [ "Get", "Post" ]
+        },
+        {
+            "DownstreamPathTemplate": "/api/{version}/{catchAll}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
@@ -9,11 +21,16 @@
                     "Port": 9001
                 }
             ],
-            "UpstreamPathTemplate": "/api/{version}/{everything}",
-            "UpstreamHttpMethod": [ "Get", "Post" ]
+            "UpstreamPathTemplate": "/api/{version}/{catchAll}",
+            "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
+            "AuthenticationOptions": {
+                "AuthenticationProviderKey": "parzival",
+                "AllowedScopes": []
+            }
         }
     ],
     "GlobalConfiguration": {
-        "BaseUrl": "http://localhost:7000"
+        "BaseUrl": "http://localhost:7000",
+        "RequestIdKey": "OcRequestId"
     }
 }
