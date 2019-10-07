@@ -1,14 +1,23 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using AuthorizationHelper;
 
 namespace AssetsApi.Controllers.v2
 {
     [Route("api/v2/[controller]")]
     [Authorize]
     [ApiController]
-    public class AssetsController : ControllerBase
+    public class AssetsController : ParzivalControllerBase
     {
+        // TODO: implement constructor
+        // public AssetsController(IAuthorizationService authorizationService)
+        // {
+        //     AuthorizationService = authorizationService;
+        // }
+
+        // In case we wanted to secure this to a specific role we could use Role based authorization
+        // [Authorize(Roles = "FacilityManager")]
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {

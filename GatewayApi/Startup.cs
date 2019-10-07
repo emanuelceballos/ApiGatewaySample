@@ -42,9 +42,10 @@ namespace GatewayApi
                 RequireExpirationTime = true,
             };
 
-            services.AddAuthentication(o =>
+            services.AddAuthentication(options =>
             {
-                o.DefaultAuthenticateScheme = _authenticationProviderKey;
+                options.DefaultAuthenticateScheme = _authenticationProviderKey;
+                // options.AddScheme<ParzivalSchemeHandler>("parzival", "Parzival Authentication Scheme");
             })
             .AddJwtBearer(_authenticationProviderKey, options => 
             {

@@ -47,7 +47,7 @@ namespace AuthApi.Controllers.v2
                 audience: "assets",
                 claims: claims,
                 notBefore: DateTime.Now,
-                expires: DateTime.Now.Add(TimeSpan.FromMinutes(2)),
+                expires: DateTime.Now.Add(TimeSpan.FromMinutes(_minutesExpiresIn)),
                 signingCredentials: new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256)
             );
 
