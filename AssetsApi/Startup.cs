@@ -23,7 +23,7 @@ namespace AssetsApi
         {
             var jwtConfig = _configuration.GetSection("JWT");
   
-            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtConfig["Secret"]));
+            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtConfig["IssuerSigningKey"]));
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,

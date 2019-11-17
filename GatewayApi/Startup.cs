@@ -19,15 +19,13 @@ namespace GatewayApi
 
         public Startup(IConfiguration configuration)
         {
-            // TODO: remove after testing
-            Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
             _configuration = configuration;
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
             var jwtConfig = _configuration.GetSection("JWT");
-            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtConfig["Secret"]));
+            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtConfig["IssuerSigningKey"]));
 
             var tokenValidationParameters = new TokenValidationParameters
             {
@@ -39,13 +37,12 @@ namespace GatewayApi
                 ValidAudience = jwtConfig["Audience"],
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero,
-                RequireExpirationTime = true,
+                RequireExpirationTime = true
             };
 
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = _authenticationProviderKey;
-                // options.AddScheme<ParzivalSchemeHandler>("parzival", "Parzival Authentication Scheme");
             })
             .AddJwtBearer(_authenticationProviderKey, options => 
             {

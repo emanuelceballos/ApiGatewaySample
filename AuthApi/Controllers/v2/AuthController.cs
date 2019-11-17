@@ -11,7 +11,7 @@ namespace AuthApi.Controllers.v2
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly string _authenticationSecretKey = "SomeCoolAtLeast16CharsPassword";
+        private readonly string _issuerSigningKey = "SomeCoolAtLeast16CharsPassword";
         private const double _minutesExpiresIn = 1440; // 24 hs
         
         [HttpGet("login")]
@@ -28,27 +28,15 @@ namespace AuthApi.Controllers.v2
                 new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUniversalTime().ToString(), ClaimValueTypes.Integer64)
             };
 
-            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_authenticationSecretKey));
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = signingKey,
-                ValidateIssuer = true,
-                ValidIssuer = "http://localhost:9002",
-                ValidateAudience = true,
-                ValidAudience = "assets",
-                ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero,
-                RequireExpirationTime = true,
-            };
-
+            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_issuerSigningKey));
+            
             var jwt = new JwtSecurityToken(
-                issuer: "http://localhost:9002",
+                issuer: "https://api.youbim.com",
                 audience: "assets",
                 claims: claims,
                 notBefore: DateTime.Now,
                 expires: DateTime.Now.Add(TimeSpan.FromMinutes(_minutesExpiresIn)),
-                signingCredentials: new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256)
+                signingCredentials: new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256)  
             );
 
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);

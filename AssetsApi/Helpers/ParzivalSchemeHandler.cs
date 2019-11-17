@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Threading.Tasks;
 
-namespace GatewayApi
+namespace AssetsApi.Helpers
 {
     public class ParzivalSchemeHandler : IAuthenticationHandler
     {
