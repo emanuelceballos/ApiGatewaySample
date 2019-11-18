@@ -33,8 +33,8 @@ namespace GatewayApi
                 IssuerSigningKey = signingKey,
                 ValidateIssuer = true,
                 ValidIssuer = jwtConfig["Issuer"],
-                ValidateAudience = true,
-                ValidAudience = jwtConfig["Audience"],
+                ValidateAudience = false,
+                // ValidAudience = jwtConfig["Audience"],
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero,
                 RequireExpirationTime = true
