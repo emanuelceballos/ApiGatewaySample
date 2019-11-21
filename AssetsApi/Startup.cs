@@ -1,10 +1,11 @@
-﻿using System;
+﻿using AssetsApi.DataAccess.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Text;
 
 namespace AssetsApi
@@ -51,6 +52,10 @@ namespace AssetsApi
             services
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            var mysqlConnectionString = _configuration["ConnectionStrings:mysqlconnection:connectionString"];
+            services.AddScoped<IAssetsRepository, AssetsRepository>();
+            services.AddScoped<IDbContext>(_ => new AssetsContext(mysqlConnectionString));
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AssetsApi.Controllers.v3
+namespace AssetsApi.v3.Controllers
 {
     [Route("api/v3/[controller]")]
     [ApiController]
