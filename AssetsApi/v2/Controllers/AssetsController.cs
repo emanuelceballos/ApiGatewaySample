@@ -21,7 +21,7 @@ namespace AssetsApi.v2.Controllers
         }
 
         // In case we wanted to secure this to a specific role we could use Role based authorization
-        // [Authorize(Roles = "FacilityManager")]
+        [Authorize(Roles = "FacilityManager")]
         [HttpGet]
         public ActionResult<IEnumerable<Asset>> Get()
         {

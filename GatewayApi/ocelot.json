@@ -27,10 +27,22 @@
                 "AuthenticationProviderKey": "parzival",
                 "AllowedScopes": []
             }
+        },
+        {
+            "DownstreamPathTemplate": "/{everything}",
+            "DownstreamScheme": "http",
+            "DownstreamHostAndPorts": [
+                {
+                    "Host": "localhost",
+                    "Port": 8888
+                }
+            ],
+            "UpstreamPathTemplate": "/{everything}",
+            "UpstreamHttpMethod": [ "Get", "Post" ]
         }
     ],
     "GlobalConfiguration": {
-        "BaseUrl": "http://localhost:7000",
+        "BaseUrl": "http://localhost",
         "RequestIdKey": "OcRequestId"
     }
 }
